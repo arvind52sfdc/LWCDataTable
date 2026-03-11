@@ -3,8 +3,9 @@ import { FlowAttributeChangeEvent } from 'lightning/flowSupport';
 
 export default class MyFlowDataTable extends LightningElement {
     // Flow Inputs
+    @api tableLabel = '';
     _allRecords = [];
-    @api 
+    @api
     get allRecords() {
         return this._allRecords;
     }
@@ -18,9 +19,9 @@ export default class MyFlowDataTable extends LightningElement {
     @api searchEnabled = false;
     @api selectionEnabled = false;
     @api paginationEnabled = false;
-    
+
     _pageSize = 50;
-    @api 
+    @api
     get pageSize() { return this._pageSize; }
     set pageSize(value) {
         this._pageSize = value ? Number(value) : 50;
@@ -73,7 +74,7 @@ export default class MyFlowDataTable extends LightningElement {
         if (this.searchTerm && this.searchEnabled) {
             const lowerSearch = this.searchTerm.toLowerCase();
             this.filteredRecords = this.allRecords.filter(record => {
-                return Object.values(record).some(val => 
+                return Object.values(record).some(val =>
                     val && String(val).toLowerCase().includes(lowerSearch)
                 );
             });
@@ -130,7 +131,7 @@ export default class MyFlowDataTable extends LightningElement {
         });
 
         this.selectedRowIds = Array.from(currentSelectedSet);
-        this.selectedRecords = this.allRecords.filter(record => 
+        this.selectedRecords = this.allRecords.filter(record =>
             currentSelectedSet.has(record.Id)
         );
 
