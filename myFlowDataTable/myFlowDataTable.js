@@ -20,11 +20,12 @@ export default class MyFlowDataTable extends LightningElement {
     @api selectionEnabled = false;
     @api paginationEnabled = false;
 
-    _pageSize = 50;
+    // Use String internally to match combobox options and metadata type
+    _pageSize = '10';
     @api
     get pageSize() { return this._pageSize; }
     set pageSize(value) {
-        this._pageSize = value ? Number(value) : 50;
+        this._pageSize = value ? String(value) : '10';
         this.applyFiltersAndPagination();
     }
 
@@ -83,13 +84,17 @@ export default class MyFlowDataTable extends LightningElement {
         }
 
         // 2. Apply Pagination
+        const numericPageSize = Number(this._pageSize) || 10;
         if (this.paginationEnabled) {
-            const start = (this.currentPage - 1) * this._pageSize;
-            const end = start + Number(this._pageSize);
+            const start = (this.currentPage - 1) * numericPageSize;
+            const end = start + numericPageSize;
             this.displayedRecords = this.filteredRecords.slice(start, end);
         } else {
             this.displayedRecords = [...this.filteredRecords];
         }
+
+        // 3. Force selection refresh for the UI
+        this.selectedRowIds = [...this.selectedRowIds];
     }
 
     handleSearchChange(event) {
@@ -131,11 +136,25 @@ export default class MyFlowDataTable extends LightningElement {
         });
 
         this.selectedRowIds = Array.from(currentSelectedSet);
-        this.selectedRecords = this.allRecords.filter(record =>
+        this.selectedRecords = this.allRecords.filter(record => 
             currentSelectedSet.has(record.Id)
         );
 
         this.dispatchEvent(new FlowAttributeChangeEvent('selectedRecords', this.selectedRecords));
+    }
+
+    handlePageSizeChange(event) {
+        this.pageSize = event.detail.value;
+    }
+
+    get pageSizeOptions() {
+        return [
+            { label: '5', value: '5' },
+            { label: '10', value: '10' },
+            { label: '25', value: '25' },
+            { label: '50', value: '50' },
+            { label: '100', value: '100' },
+        ];
     }
 
     get totalRecordsCount() {
@@ -144,11 +163,13 @@ export default class MyFlowDataTable extends LightningElement {
 
     get recordRangeStart() {
         if (this.totalRecordsCount === 0) return 0;
-        return (this.currentPage - 1) * this._pageSize + 1;
+        const numericPageSize = Number(this._pageSize) || 10;
+        return (this.currentPage - 1) * numericPageSize + 1;
     }
 
     get recordRangeEnd() {
-        const end = this.currentPage * this._pageSize;
+        const numericPageSize = Number(this._pageSize) || 10;
+        const end = this.currentPage * numericPageSize;
         return end > this.totalRecordsCount ? this.totalRecordsCount : end;
     }
 
@@ -157,7 +178,8 @@ export default class MyFlowDataTable extends LightningElement {
     }
 
     get isLastPage() {
-        return this.currentPage >= Math.ceil(this.totalRecordsCount / this._pageSize) || this.totalRecordsCount === 0;
+        const numericPageSize = Number(this._pageSize) || 10;
+        return this.currentPage >= Math.ceil(this.totalRecordsCount / numericPageSize) || this.totalRecordsCount === 0;
     }
 
     get isNoData() {
