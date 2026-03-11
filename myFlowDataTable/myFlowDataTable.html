@@ -4,14 +4,8 @@
             <!-- Search Bar -->
             <template lwc:if={searchEnabled}>
                 <div class="slds-m-bottom_small">
-                    <lightning-input
-                        name="search"
-                        label="Search"
-                        type="search"
-                        placeholder="Search across columns..."
-                        onchange={handleSearchChange}
-                        variant="label-hidden"
-                    ></lightning-input>
+                    <lightning-input name="search" label="Search" type="search" placeholder="Search across columns..."
+                        onchange={handleSearchChange} variant="label-hidden"></lightning-input>
                 </div>
             </template>
 
@@ -25,15 +19,9 @@
             <!-- Data Table -->
             <template lwc:else>
                 <div style="height: 400px;">
-                    <lightning-datatable
-                        key-field="Id"
-                        data={displayedRecords}
-                        columns={columns}
-                        onrowselection={handleRowSelection}
-                        selected-rows={selectedRowIds}
-                        max-row-selection={maxRowSelection}
-                        hide-checkbox-column={isCheckboxHidden}
-                    >
+                    <lightning-datatable key-field="Id" data={displayedRecords} columns={columns}
+                        onrowselection={handleRowSelection} selected-rows={selectedRowIds}
+                        max-row-selection={maxRowSelection} hide-checkbox-column={isCheckboxHidden}>
                     </lightning-datatable>
                 </div>
 
@@ -46,27 +34,26 @@
 
                 <!-- Pagination Footer -->
                 <template lwc:if={paginationEnabled}>
-                    <div class="slds-grid slds-grid_align-spread slds-m-top_medium slds-p-top_small slds-border_top">
-                        <div class="slds-col">
-                            <p class="slds-text-body_small">
+                    <div
+                        class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-m-top_medium slds-p-top_small slds-border_top">
+                        <div
+                            class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-grid slds-grid_vertical-align-center">
+                            <p class="slds-text-body_small slds-m-right_medium">
                                 Showing {recordRangeStart} - {recordRangeEnd} of {totalRecordsCount}
                             </p>
+                            <div style="width: 100px;">
+                                <lightning-combobox name="pageSize" label="Page Size" variant="label-hidden"
+                                    value={pageSize} options={pageSizeOptions}
+                                    onchange={handlePageSizeChange}></lightning-combobox>
+                            </div>
+                            <span class="slds-text-body_small slds-m-left_small">per page</span>
                         </div>
                         <div class="slds-col">
                             <lightning-button-group>
-                                <lightning-button
-                                    label="Previous"
-                                    icon-name="utility:chevronleft"
-                                    onclick={handlePrevious}
-                                    disabled={isFirstPage}
-                                ></lightning-button>
-                                <lightning-button
-                                    label="Next"
-                                    icon-name="utility:chevronright"
-                                    icon-position="right"
-                                    onclick={handleNext}
-                                    disabled={isLastPage}
-                                ></lightning-button>
+                                <lightning-button label="Previous" icon-name="utility:chevronleft"
+                                    onclick={handlePrevious} disabled={isFirstPage}></lightning-button>
+                                <lightning-button label="Next" icon-name="utility:chevronright" icon-position="right"
+                                    onclick={handleNext} disabled={isLastPage}></lightning-button>
                             </lightning-button-group>
                         </div>
                     </div>
