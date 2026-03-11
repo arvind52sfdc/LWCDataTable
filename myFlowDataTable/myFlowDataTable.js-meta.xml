@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>60.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Advanced Flow Data Table</masterLabel>
+    <description>A high-performance, configurable data table for Screen Flows.</description>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <propertyType name="T" extends="SObject" label="Object Name" description="Select the SObject type for the records." />
+
+            <property name="allRecords" type="{T[]}" label="Records to Display" role="inputOnly" />
+            <property name="fieldsToDisplay" type="String" label="Columns (Field API Names)" role="inputOnly" />
+            <property name="searchEnabled" type="Boolean" label="Show Search Bar" default="true" role="inputOnly" />
+            <property name="paginationEnabled" type="Boolean" label="Enable Pagination" default="true" role="inputOnly" />
+            
+            <property name="pageSize" type="String" label="Page Size" default="50" datasource="5,10,25,50,100" />
+            
+            <property name="selectionEnabled" type="Boolean" label="Enable Row Selection" default="true" role="inputOnly" />
+            <property name="selectionMode" type="String" label="Selection Mode" default="multiple" datasource="single,multiple" />
+            
+            <property name="selectedRecords" type="{T[]}" label="Selected Records" role="outputOnly" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>
