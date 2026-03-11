@@ -20,10 +20,11 @@
             <property name="searchEnabled" type="Boolean" label="Show Search Bar" default="false" role="inputOnly" />
             <property name="paginationEnabled" type="Boolean" label="Enable Pagination" default="false" role="inputOnly" />
             
-            <property name="pageSize" type="String" label="Page Size" default="50" datasource="5,10,25,50,100" />
+            <!-- Default page size updated to 10 as requested, role added back -->
+            <property name="pageSize" type="String" label="Page Size" default="10" role="inputOnly" datasource="5,10,25,50,100" />
             
             <property name="selectionEnabled" type="Boolean" label="Enable Row Selection" default="false" role="inputOnly" />
-            <property name="selectionMode" type="String" label="Selection Mode" default="multiple" datasource="single,multiple" />
+            <property name="selectionMode" type="String" label="Selection Mode" default="multiple" role="inputOnly" datasource="single,multiple" />
             
             <property name="selectedRecords" type="{T[]}" label="Selected Records" role="outputOnly" />
         </targetConfig>
