@@ -1,0 +1,77 @@
+<template>
+    <lightning-card title="Data Table" icon-name="standard:datatable">
+        <div class="slds-p-around_medium">
+            <!-- Search Bar -->
+            <template lwc:if={searchEnabled}>
+                <div class="slds-m-bottom_small">
+                    <lightning-input
+                        name="search"
+                        label="Search"
+                        type="search"
+                        placeholder="Search across columns..."
+                        onchange={handleSearchChange}
+                        variant="label-hidden"
+                    ></lightning-input>
+                </div>
+            </template>
+
+            <!-- Loading Spinner -->
+            <template lwc:if={isLoading}>
+                <div class="slds-is-relative slds-p-around_large">
+                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                </div>
+            </template>
+
+            <!-- Data Table -->
+            <template lwc:else>
+                <div style="height: 400px;">
+                    <lightning-datatable
+                        key-field="Id"
+                        data={displayedRecords}
+                        columns={columns}
+                        onrowselection={handleRowSelection}
+                        selected-rows={selectedRowIds}
+                        max-row-selection={maxRowSelection}
+                        hide-checkbox-column={isCheckboxHidden}
+                    >
+                    </lightning-datatable>
+                </div>
+
+                <!-- Empty State -->
+                <template lwc:if={isNoData}>
+                    <div class="slds-text-align_center slds-p-around_large">
+                        No records found.
+                    </div>
+                </template>
+
+                <!-- Pagination Footer -->
+                <template lwc:if={paginationEnabled}>
+                    <div class="slds-grid slds-grid_align-spread slds-m-top_medium slds-p-top_small slds-border_top">
+                        <div class="slds-col">
+                            <p class="slds-text-body_small">
+                                Showing {recordRangeStart} - {recordRangeEnd} of {totalRecordsCount}
+                            </p>
+                        </div>
+                        <div class="slds-col">
+                            <lightning-button-group>
+                                <lightning-button
+                                    label="Previous"
+                                    icon-name="utility:chevronleft"
+                                    onclick={handlePrevious}
+                                    disabled={isFirstPage}
+                                ></lightning-button>
+                                <lightning-button
+                                    label="Next"
+                                    icon-name="utility:chevronright"
+                                    icon-position="right"
+                                    onclick={handleNext}
+                                    disabled={isLastPage}
+                                ></lightning-button>
+                            </lightning-button-group>
+                        </div>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>
