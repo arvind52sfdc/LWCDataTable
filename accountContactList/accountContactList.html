@@ -1,0 +1,128 @@
+<template>
+    <lightning-card title={title} icon-name="standard:account">
+        <div class="slds-p-around_medium">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            </template>
+            
+            <template if:false={isLoading}>
+                <template if:true={hasError}>
+                    <div class="slds-notify slds-notify_alert slds-theme_alert-error slds-theme_error" role="alert">
+                        <span class="slds-assistive-text">error</span>
+                        <p>{errorMessage}</p>
+                    </div>
+                </template>
+                
+                <template if:false={hasError}>
+                    <template if:true={accounts.length}>
+                        <ul class="slds-listbox slds-listbox_large">
+                            <template for:each={accounts} for:item="account">
+                                <li key={account.Id} class="slds-listbox__item">
+                                    <div class="slds-listbox__option">
+                                        <!-- Collapsible Chevron Header -->
+                                        <div 
+                                            class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center account-header"
+                                            onclick={handleAccountClick}
+                                            data-account-id={account.Id}
+                                            style="cursor: pointer; padding: 0.5rem;"
+                                        >
+                                            <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center">
+                                                <!-- Chevron Icon -->
+                                                <lightning-icon 
+                                                    icon-name="utility:chevronright" 
+                                                    size="x-small"
+                                                    class={getChevronClass(account.Id)}
+                                                    style="margin-right: 0.5rem; transition: transform 0.2s;"
+                                                ></lightning-icon>
+                                                
+                                                <!-- Account Name -->
+                                                <div class="slds-truncate" style="max-width: 300px;">
+                                                    <h3 class="slds-truncate slds-text-heading_small">{account.Name}</h3>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Account Details -->
+                                            <div class="slds-grid slds-grid_vertical-align-center">
+                                                <template if:true={account.Phone}>
+                                                    <span class="slds-text-body_regular slds-m-right_medium">
+                                                        <lightning-icon icon-name="utility:phone" size="x-small" class="slds-m-right_xxx-small"></lightning-icon>
+                                                        {account.Phone}
+                                                    </span>
+                                                </template>
+                                                <template if:true={account.Industry}>
+                                                    <span class="slds-text-body_regular slds-theme_default">
+                                                        {account.Industry}
+                                                    </span>
+                                                </template>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Contacts List (Collapsible) -->
+                                        <div 
+                                            class="contacts-container"
+                                            data-account-id={account.Id}
+                                            style={getContactsDisplayStyle(account.Id)}
+                                        >
+                                            <div class="slds-divider slds-divider_left-label slds-m-vertical_small">
+                                                <span class="slds-divider_left-label_text">
+                                                    <strong>{account.Contacts.records.length} Contact(s)</strong>
+                                                </span>
+                                            </div>
+                                            
+                                            <template if:true={account.Contacts.records.length}>
+                                                <ul class="slds-listbox slds-listbox_flat">
+                                                    <template for:each={account.Contacts.records} for:item="contact">
+                                                        <li key={contact.Id} class="slds-listbox__item">
+                                                            <div class="slds-listbox__option">
+                                                                <div class="slds-grid slds-grid_vertical-align-center">
+                                                                    <div class="slds-m-right_medium">
+                                                                        <lightning-avatar 
+                                                                            name={contact.Name} 
+                                                                            fallback-icon-name="standard:contact" 
+                                                                            size="small"
+                                                                        ></lightning-avatar>
+                                                                    </div>
+                                                                    <div>
+                                                                        <h4 class="slds-truncate slds-text-title_bold">{contact.Name}</h4>
+                                                                        <p class="slds-text-body_small slds-text-color_weak">
+                                                                            <template if:true={contact.Title}>{contact.Title}</template>
+                                                                            <template if:true={contact.Email}>
+                                                                                <br/>
+                                                                                <a href="mailto:{contact.Email}">{contact.Email}</a>
+                                                                            </template>
+                                                                            <template if:true={contact.Phone}>
+                                                                                <br/>
+                                                                                <lightning-icon icon-name="utility:phone" size="xx-small" class="slds-m-right_xxx-small"></lightning-icon>
+                                                                                {contact.Phone}
+                                                                            </template>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </template>
+                                                </ul>
+                                            </template>
+                                            <template if:false={account.Contacts.records.length}>
+                                                <p class="slds-text-body_small slds-text-color_weak slds-p-left_medium">
+                                                    No contacts associated with this account.
+                                                </p>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                    
+                    <template if:false={accounts.length}>
+                        <div class="slds-text-align_center slds-p-vertical_medium">
+                            <lightning-icon icon-name="custom:custom96" size="large" class="slds-text-color_weak"></lightning-icon>
+                            <p class="slds-text-body_regular slds-text-color_weak">No accounts found</p>
+                        </div>
+                    </template>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>
